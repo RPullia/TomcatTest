@@ -1,9 +1,14 @@
 package org.example.rest;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import org.bson.*;
 
 
 @Path("/") //this specify a base path
@@ -11,15 +16,13 @@ import org.bson.*;
 public class HelloRestService {
 
 
-    BsonDocument timestamp = new BsonDocument()
-          .append("date", new BsonString("2021-01-20T16:59:20.801Z"));
+    MongoClient mongoClient = MongoClients.create();
 
-    BsonDocument obj = new BsonDocument()
-          .append("email",new BsonString("email@example.com"))
-          .append("timestamp", timestamp)
-            .append("version",new BsonString("2.0"))
-            .append("path",new BsonString("my.package.className"));
+    // get handle to "Demo" database
+    MongoDatabase database = mongoClient.getDatabase("Demo");
 
+    //get handle to the "Samples" collection
+    MongoCollection<Document> collection = database.getCollection("Samples");
 
 
     @GET //this annotation indicates GET request and the code to execute if we get a GET request
@@ -27,8 +30,20 @@ public class HelloRestService {
     //the endpoint to utilize
     @Path("/hello")
 
+
     public Response hello(){
-        //given the path "/hello" reply back with a respons with 200 status code OK and "hello"
-        return Response.status(200).entity(obj.toString()).build();
+        //given the path "/hello" reply back with a response with 200 status code OK and "hello"
+        StringBuilder sb = new StringBuilder();
+
+
+        for (Document cur : collection.find()) {
+            sb.append(cur.toString());
+        }
+
+        mongoClient.close();
+
+        return Response.status(200).entity(sb.toString()).build();
+
+        //return Response.status(200).entity(obj.toString()).build();
     }
 }
