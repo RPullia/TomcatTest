@@ -37,9 +37,10 @@ public class HelloRestService {
 
 
         for (Document cur : collection.find()) {
-            sb.append(cur.toString());
+            sb.append(cur.toString()+"\n");
         }
 
+        sb.append(" FINE LISTA");
         mongoClient.close();
 
         return Response.status(200).entity(sb.toString()).build();
