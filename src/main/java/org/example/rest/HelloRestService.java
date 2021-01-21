@@ -10,14 +10,7 @@ import org.bson.*;
 
 public class HelloRestService {
 
-  /*  String json = "{\n" +
-            "\t\"email\": \"email@example.com\",\n" +
-            "\t\"timestamp\": {\n" +
-            "\t\t\"$date\": \"2021-01-20T16:59:20.801Z\"\n" +
-            "\t},\n" +
-            "\t\"version\": \"2.0\",\n" +
-            "\t\"path\": \"my.package.className\"\n} ";
-*/
+
     BsonDocument timestamp = new BsonDocument()
           .append("date", new BsonString("2021-01-20T16:59:20.801Z"));
 
